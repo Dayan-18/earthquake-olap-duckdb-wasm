@@ -4,6 +4,8 @@
 
 A **serverless OLAP solution**: two years of global earthquakes (USGS, M2.5+) are modeled as a **star schema**, stored as **Parquet**, and analyzed **inside the browser** with **DuckDB-WASM**. A GitHub Actions workflow rebuilds and redeploys everything every day. There are no servers, no databases to maintain, and no AWS.
 
+![Earthquake OLAP Explorer](docs/cover.png)
+
 **Live dashboard:** https://dayan-18.github.io/earthquake-olap-duckdb-wasm/
 
 ## Architecture
