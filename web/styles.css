@@ -1,0 +1,92 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #16181d;
+  --muted: #5c6370;
+  --border: #e2e5ea;
+  --accent: #c2410c;
+  --accent-soft: #fff1e8;
+  --grid: rgba(0, 0, 0, 0.07);
+  --radius: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115;
+    --surface: #181b21;
+    --text: #e8eaee;
+    --muted: #9aa1ad;
+    --border: #2a2f38;
+    --accent: #fb923c;
+    --accent-soft: #2b1c12;
+    --grid: rgba(255, 255, 255, 0.08);
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 20px 16px 40px;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+h1 { font-size: 1.6rem; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 1rem; margin: 0; }
+.sub, .muted { color: var(--muted); }
+.sub { margin: 4px 0 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+.top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 0.9rem; }
+.pill { padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; background: var(--accent-soft); color: var(--accent); }
+.pill.ok { background: rgba(22, 163, 74, 0.12); color: #16a34a; }
+.pill.err { background: rgba(220, 38, 38, 0.12); color: #dc2626; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.card-head .muted { font-size: 0.85rem; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--muted); }
+input, select, button, textarea {
+  font: inherit; color: var(--text); background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px;
+}
+input[type="range"] { padding: 0; accent-color: var(--accent); }
+button { cursor: pointer; background: var(--accent); color: #fff; border-color: transparent; font-weight: 600; }
+button:hover { filter: brightness(1.08); }
+#f-reset { background: transparent; color: var(--accent); border-color: var(--accent); }
+select { max-width: 240px; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 4px; }
+.kpi { display: flex; flex-direction: column; gap: 2px; margin-bottom: 12px; }
+.kpi .label { font-size: 0.8rem; color: var(--muted); }
+.kpi .value { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.kpi .hint { font-size: 0.78rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-2 > .card { margin-bottom: 16px; min-width: 0; }
+@media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; gap: 0; } }
+
+.chart-box { position: relative; height: 280px; }
+.chart-box.tall { height: 340px; }
+
+.pivot-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 600; }
+.pivot td.cell { border-radius: 4px; }
+.pivot tr.total td, .pivot td.total { font-weight: 700; }
+
+#map { height: 420px; border-radius: 8px; z-index: 0; }
+
+.console-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.console-bar select { max-width: 100%; flex: 1 1 260px; }
+textarea { width: 100%; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.85rem; resize: vertical; }
+.table-wrap { overflow: auto; max-height: 360px; margin-top: 10px; }
+.error { color: #dc2626; white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 0.85rem; }
+
+footer { font-size: 0.85rem; text-align: center; margin-top: 8px; }

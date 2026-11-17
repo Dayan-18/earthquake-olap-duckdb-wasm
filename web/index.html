@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earthquake OLAP Explorer</title>
+  <meta name="description" content="Serverless OLAP dashboard: USGS earthquakes modeled as a star schema in Parquet and queried in the browser with DuckDB-WASM.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Earthquake OLAP Explorer</h1>
+      <p class="sub">USGS earthquakes M2.5+ · star schema in Parquet · SQL runs <strong>in your browser</strong> with DuckDB-WASM</p>
+    </div>
+    <div class="meta">
+      <span id="status" class="pill loading">Loading DuckDB-WASM…</span>
+      <span id="updated" class="muted"></span>
+      <a href="https://github.com/Dayan-18/earthquake-olap-duckdb-wasm" target="_blank" rel="noopener">GitHub repo ↗</a>
+    </div>
+  </header>
+
+  <section class="filters card" aria-label="Filters (slice and dice)">
+    <label>From <input type="date" id="f-from"></label>
+    <label>To <input type="date" id="f-to"></label>
+    <label>Min magnitude <span id="f-mag-val" class="num">2.5</span>
+      <input type="range" id="f-mag" min="2.5" max="8" step="0.1" value="2.5">
+    </label>
+    <label>Country / area
+      <select id="f-country"><option value="">All</option></select>
+    </label>
+    <label>Depth
+      <select id="f-depth"><option value="">All</option></select>
+    </label>
+    <label>Time grain (roll-up / drill-down)
+      <select id="f-grain">
+        <option value="year">Year</option>
+        <option value="quarter">Quarter</option>
+        <option value="month" selected>Month</option>
+        <option value="week">Week</option>
+        <option value="day">Day</option>
+      </select>
+    </label>
+    <button id="f-reset" type="button">Reset</button>
+  </section>
+
+  <section class="kpis" aria-label="Key figures">
+    <div class="kpi card"><span class="label">Earthquakes</span><span class="value" id="k-count">–</span></div>
+    <div class="kpi card"><span class="label">Avg magnitude</span><span class="value" id="k-avg">–</span></div>
+    <div class="kpi card"><span class="label">Strongest</span><span class="value" id="k-max">–</span><span class="hint" id="k-max-place"></span></div>
+    <div class="kpi card"><span class="label">Avg depth</span><span class="value" id="k-depth">–</span></div>
+    <div class="kpi card"><span class="label">Dashboard query time</span><span class="value" id="k-ms">–</span><span class="hint">computed locally</span></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Earthquakes over time by magnitude class</h2>
+      <span class="muted" id="grain-label"></span>
+    </div>
+    <div class="chart-box tall"><canvas id="c-time"></canvas></div>
+  </section>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="card-head">
+        <h2 id="geo-title">Top countries / areas</h2>
+        <span class="muted" id="geo-hint">Click a bar to drill down</span>
+      </div>
+      <div class="chart-box tall"><canvas id="c-geo"></canvas></div>
+    </section>
+    <section class="card">
+      <div class="card-head">
+        <h2>Pivot: depth × magnitude class</h2>
+        <span class="muted">event count</span>
+      </div>
+      <div id="pivot" class="pivot-wrap"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Strongest 500 events in the current slice</h2>
+      <span class="muted">circle size = magnitude</span>
+    </div>
+    <div id="map"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>SQL console</h2>
+      <span class="muted">Tables: fact_earthquake, dim_date, dim_region, dim_magnitude, dim_depth</span>
+    </div>
+    <div class="console-bar">
+      <select id="sql-examples" aria-label="Example queries"></select>
+      <button id="sql-run" type="button">Run ▶</button>
+      <span id="sql-info" class="muted"></span>
+    </div>
+    <textarea id="sql" spellcheck="false" rows="9" aria-label="SQL query"></textarea>
+    <div id="sql-out" class="table-wrap"></div>
+  </section>
+
+  <footer class="muted">
+    Data: <a href="https://earthquake.usgs.gov/fdsnws/event/1/" target="_blank" rel="noopener">USGS Earthquake Catalog</a>.
+    Pipeline: GitHub Actions (daily) → Python + DuckDB → Parquet → GitHub Pages → DuckDB-WASM. No servers, no AWS.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
